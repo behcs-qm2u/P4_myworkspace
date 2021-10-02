@@ -1,0 +1,5 @@
+package com.appium.calc;
+
+public class BaseClass {
+
+}

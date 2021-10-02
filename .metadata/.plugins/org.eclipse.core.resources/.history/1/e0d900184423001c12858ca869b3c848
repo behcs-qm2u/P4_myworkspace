@@ -1,0 +1,16 @@
+package com.appium.tboader;
+
+public class TBoarderTest01 extend TBBaseClass {
+
+	public static void main(String[] args) {
+
+		System.out.println("This is main() for " + (new Object(){}.getClass().getEnclosingClass().getSimpleName()));
+		
+		// find out elements
+		
+		// List <MobileElement> lstElm = 
+		
+		
+	}
+
+}

@@ -1,0 +1,73 @@
+package com.appium.tboader;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+
+import io.appium.java_client.MobileElement;
+
+public class TBoarderTest01 extends TBBaseClass {
+
+	public static void main(String[] args) throws InterruptedException {
+
+		System.out.println("This is main() for " + (new Object(){}.getClass().getEnclosingClass().getSimpleName()));
+		
+		System.out.println("Driver" + driver);
+		
+		// SessionId sessionId = driver.getSessionId();
+		// System.out.println(sessionId);
+		// Thread.sleep(1000);
+		
+		// find out elements
+		
+		// Check if first page needed
+		// android.widget.Button[@text='Continue']
+		String locValue = "//android.widget.Button[@text='Continue']";
+		checkAndClick(locValue);
+		Thread.sleep(1000);
+		
+		// We need to bypass the app update reminder screen
+		// API Demos .. This app was built... bla bla bla
+		// Verify text box exist
+		//android.widget.TextView[contains(@text, "This app")]
+		String chkValue = "//android.widget.TextView[contains(@text, \"This app\")]";
+		if ( driver.findElements(By.xpath(chkValue)).size() != 0 ) {
+			locValue = "//android.widget.Button[@text='OK']";
+			checkAndClick(locValue);
+		}
+		
+		// We also need to bypass the Change Log reminder screen
+		chkValue = "//android.widget.TextView[contains(@text, \"Change Log\")]";
+		if ( driver.findElements(By.xpath(chkValue)).size() != 0 ) {
+			locValue = "//android.widget.Button[@text='OK']";
+			checkAndClick(locValue);
+		}		
+		
+        locValue = "//android.widget.TextView[@text='API Demos']";
+        checkAndClick(locValue);
+        Thread.sleep(1000);
+        locValue = "//android.widget.TextView[@text='Views']";
+        checkAndClick(locValue);
+        Thread.sleep(1000);
+        
+        
+        // === 
+        
+
+		
+		
+		
+		
+	}
+	
+	
+	private static void checkAndClick(String locValue) {
+	
+		List<MobileElement> lstElems = driver.findElements(By.xpath(locValue));
+		if (lstElems.size() > 0) {
+			lstElems.get(0).click();
+		}
+		
+	}
+
+}

@@ -1,0 +1,156 @@
+package com.appium.tboader;
+
+import java.net.MalformedURLException;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.By.ByXPath;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import io.appium.java_client.MobileElement;
+
+public class TBoarderTest01 extends TBBaseClass {
+
+	public static void main(String[] args) throws InterruptedException, MalformedURLException {
+
+		System.out.println("This is main() for " + (new Object(){}.getClass().getEnclosingClass().getSimpleName()));
+		
+		// Call the BaseClass's setup. Later can change to Unit Test annotation
+		setup();
+
+		SessionId sessionId = driver.getSessionId();
+		System.out.println("INFO: sessionId: " + sessionId + " on " + driver.getRemoteAddress());
+		Thread.sleep(1000);
+		
+		// Check in first page? Click continue for the permissions
+		String prechkLoc = "//android.widget.TextView[@resource-id='com.android.permissioncontroller:id/permissions_message']";
+		String clickLoc = "//android.widget.Button[@text='Continue']";
+		valAndClick(prechkLoc, clickLoc);
+		
+		// We need to bypass the app update reminder screen
+		// API Demos .. This app was built... bla bla bla
+		prechkLoc = "//android.widget.TextView[contains(@text, \"This app\")]";
+		clickLoc = "//android.widget.Button[@text='OK']";
+		valAndClick(prechkLoc, clickLoc);
+		
+		// We also need to bypass the Change Log reminder screen
+		prechkLoc = "//android.widget.TextView[contains(@text, \"Change Log\")]";
+		clickLoc = "//android.widget.TextView[@text='OK']";
+		valAndClick(prechkLoc, clickLoc);
+
+		System.out.println("INFO: Entering API DEMOS screen...");
+		clickView("API Demos");
+        clickView("Views");
+        clickView("Controls");
+        clickView("01. Light Theme");
+        
+        System.out.println("INFO: Finished execution.");
+	}
+
+	/**
+	 * Helper method to select and click the list view item identified by elemClick
+	 * 
+	 * @param elemClick String for the element's text attribute
+	 * @throws InterruptedException 
+	 */
+	private static void clickView(String elemClick) throws InterruptedException {
+
+		MobileElement parent = null; 
+		List<MobileElement> lstViews = null;
+
+		System.out.println("DEBUG:clickView():: Going to click [" + elemClick +"]");
+		// we will do <retries times>
+		// StaleElement exception seems very common here, we will do retry
+		int retry_max = 3;
+		WebDriverWait wait2 = (WebDriverWait) new WebDriverWait(driver, 8)
+				.ignoring(StaleElementReferenceException.class);
+
+		while (retry_max-- > 0) {
+
+			parent = (MobileElement) wait2.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.FrameLayout[@resource-id='android:id/content']")));
+			// parent = (MobileElement) wait2.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.ListView[@resource-id='android:id/list']")));
+			
+			if ( parent != null ) {
+				try {
+					lstViews = parent.findElements(By.xpath("//android.widget.TextView"));
+					
+					System.out.println("DEBUG: clickView():: Size of List View:" + lstViews.size());
+					for (MobileElement view : lstViews) {
+						System.out.println(" -> " + view.getAttribute("text"));
+						// iterate until the elemClick to click
+						if (view.getAttribute("text").equals(elemClick)) {
+							System.out.println("     ^-- CLICK!");
+							view.click();
+							// break;
+							return ;
+						}
+					}	
+					// if not found?!
+					System.out.println("FATAL:clickView():: [" + elemClick + "] not found!");
+					break;
+					
+				}
+				catch (StaleElementReferenceException e) {
+					System.out.println("DEBUG:clickView():: Caught [StaleElementReferenceException] retrying.." );
+				}
+				catch (Exception e) {
+					System.out.println("DEBUG:clickView():: Caught [something else?!] retrying.." );
+					e.printStackTrace();
+				}
+
+			}
+			else {
+				System.out.println("DEBUG:clickView():: retrying.." );
+			}
+
+		}
+
+
+
+		
+
+
+	}
+	
+	
+	/**
+	 * Helper method to check element in prechkLocator exists, then select and click the element of clickLocator
+	 * 
+	 * @param prechkLocator Xpath string for pre-check element
+	 * @param clickLocator Xpath string for the element to click
+	 */
+	private static void valAndClick(String prechkLocator, String clickLocator) {
+		
+		try {
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(prechkLocator)));
+				checkAndClick(clickLocator);
+		}
+		catch (TimeoutException e) {
+			System.out.println("FATAL: Pre-check element not exist / Timeout!");
+		}
+		catch (Exception e) {
+			// something else wrong?
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private static void checkAndClick(String locValue) {
+
+			List<MobileElement> lstElems = driver.findElements(By.xpath(locValue));
+		
+			if (lstElems.size() > 0) {
+				// System.out.println("DEBUG: checkAndClick()::Elems size: " + lstElems.size());
+				lstElems.get(0).click();
+			}
+			else {
+				System.out.println("ERROR: checkAndClick()::element [" + locValue + "] not found in list view!");
+			}
+		
+	}
+
+}

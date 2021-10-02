@@ -1,0 +1,14 @@
+package com.appium.tboader;
+
+public class TBoarderTest01 {
+
+	public void Test01() {
+		
+		System.out.println("This is test01");
+		
+		
+		
+	}
+	
+	
+}

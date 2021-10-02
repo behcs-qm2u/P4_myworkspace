@@ -1,0 +1,51 @@
+package com.appium.calcscreen;
+
+import java.net.URL;
+
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+
+public class BaseScreen {
+
+    protected AndroidDriver<MobileElement> driver;
+    protected WebDriverWait                wait;
+    protected MobileActions                mobileActions;
+    
+    public BaseScreen(AndroidDriver<MobileElement> driver) {
+        this.driver = driver;
+        wait = new WebDriverWait(driver, 15);
+        mobileActions = new MobileActions(driver);
+        
+		URL url = new URL("http://127.0.0.1:4723/wd/hub");
+
+		// Desired capability
+		DesiredCapabilities cap = new DesiredCapabilities();
+
+		cap.setCapability("platfromName", "Android");
+		cap.setCapability("platformVersion", "11");
+		cap.setCapability("appPackage", "com.google.android.calculator");
+		cap.setCapability("appActivity","com.android.calculator2.Calculator");
+		
+		//      {
+		//      "platformName": "Android",
+		//      "platformVersion": "11",
+		//      "appPackage": "com.google.android.calculator",
+		//      "appActivity": "com.android.calculator2.Calculator"
+		//    }
+
+		// Android Driver
+		AndroidDriver<MobileElement> driver = new AndroidDriver<MobileElement>(url, cap);
+
+	
+		System.out.println("driver:" + driver);
+		
+		
+		WebDriverWait wait = new WebDriverWait(driver,  10);        
+        
+    }	
+	
+	
+}

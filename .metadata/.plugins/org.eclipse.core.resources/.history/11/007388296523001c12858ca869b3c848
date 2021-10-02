@@ -1,0 +1,131 @@
+package com.appium.tboader;
+
+import java.net.MalformedURLException;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.By.ByXPath;
+import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import io.appium.java_client.MobileElement;
+
+public class TBoarderTest01 extends TBBaseClass {
+
+	public static void main(String[] args) throws InterruptedException, MalformedURLException {
+
+		System.out.println("This is main() for " + (new Object(){}.getClass().getEnclosingClass().getSimpleName()));
+		
+		// Call the BaseClass's setup. Later can change to Unit Test annotation
+		setup();
+
+		SessionId sessionId = driver.getSessionId();
+		System.out.println(sessionId);
+		Thread.sleep(1000);
+		
+		// find out elements
+		
+		// Check if first page needed
+		// android.widget.Button[@text='Continue']
+		String locValue = "//android.widget.Button[@text='Continue']";
+		checkAndClick(locValue);
+		Thread.sleep(1000);
+		
+		// We need to bypass the app update reminder screen
+		// API Demos .. This app was built... bla bla bla
+		// Verify text box exist
+		//android.widget.TextView[contains(@text, "This app")]
+		String chkValue = "//android.widget.TextView[contains(@text, \"This app\")]";
+		if ( driver.findElements(By.xpath(chkValue)).size() != 0 ) {
+			locValue = "//android.widget.Button[@text='OK']";
+			checkAndClick(locValue);
+		} else {
+			System.out.println("FATAL: Apps update screen failed");
+			return;
+		}
+		
+		// We also need to bypass the Change Log reminder screen
+		chkValue = "//android.widget.TextView[contains(@text, \"Change Log\")]";
+		if ( driver.findElements(By.xpath(chkValue)).size() != 0 ) {
+			locValue = "//android.widget.TextView[@text='OK']";
+			checkAndClick(locValue);
+		} else {
+			System.out.println("FATAL: ChangeLog screen failed");
+			return;
+		}
+		
+		System.out.println("=== At main function screen ===");
+		
+		// DEBUG - going to find id/content
+		try {
+			
+			//*[contains(@resource-id,'android:id/content')]
+			// wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.id("android:id/content']"))) ;
+			// List<MobileElement> parents = driver.findElements(By.id("android:id/content']"));
+			// wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//*[contains(@resource-id,'android:id/content')]"))) ;	
+			//List<MobileElement> parents = driver.findElements(By.xpath("//*[contains(@resource-id,'android:id/content')]"));
+			
+			List<MobileElement> parents = driver.findElements(By.xpath("//*"));
+			
+			for (MobileElement parents : child) {
+				System.out.println(child.getAttribute("text"));
+			
+			
+			System.out.println("DEBUG: parents size: " + parents.size());
+		} catch (TimeoutException e) {
+			System.out.println("ERROR! FrameLayout not able to find");
+			return ;
+		}
+		
+		
+		Thread.sleep(10000);
+        //locValue = "//android.widget.TextView[@text='API Demos']";
+        //checkAndClick(locValue);
+		clickView("API Demos");
+
+        // === Practise 2 : Hierarchy  
+        clickView("Views");
+        clickView("Controls");
+        clickView("01. Light Theme");
+ 
+
+
+	}
+
+	private static void clickView(String elemClick) {
+
+		// MobileElement parent = driver.findElement(By.xpath("//android.widget.FrameLayout[@resource-id='android:id/list']"));
+		// MobileElement parent = driver.findElement(By.id("android:id/list"));
+		MobileElement parent = driver.findElement(By.xpath("//android.widget.FrameLayout[@resource-id='android:id/content']"));
+
+		System.out.println("DEBUG: clickview parent: " + parent);
+		
+		List<MobileElement> lstViews = parent.findElements(By.xpath("//android.widget.TextView"));
+		for (MobileElement view : lstViews) {
+			System.out.println(view.getAttribute("text"));
+			if (view.getAttribute("text").equals(elemClick)) {
+				view.click();
+				break;
+			}
+		}		
+
+	}
+	
+	
+	private static void checkAndClick(String locValue) {
+	
+		List<MobileElement> lstElems = driver.findElements(By.xpath(locValue));
+		
+		if (lstElems.size() > 0) {
+			System.out.println("Elem size: " + lstElems.size());
+			lstElems.get(0).click();
+		}
+		else {
+			System.out.println("DEBUG: element [" + locValue + "] not found!");
+			
+		}
+		
+	}
+
+}

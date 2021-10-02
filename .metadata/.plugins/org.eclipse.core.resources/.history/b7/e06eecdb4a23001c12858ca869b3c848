@@ -1,0 +1,39 @@
+package com.appium.tboader;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+
+import io.appium.java_client.MobileElement;
+
+public class TBoarderTest01 extends TBBaseClass {
+
+	public static void main(String[] args) {
+
+		System.out.println("This is main() for " + (new Object(){}.getClass().getEnclosingClass().getSimpleName()));
+		
+		SessionId sessionId = driver.getSessionId();
+		System.out.println(sessionId);
+		Thread.sleep(1000);
+		
+		// find out elements
+		
+		// Check if first page needed
+		// android.widget.Button[@text='Continue']
+		String locValue = "android.widget.Button[@text='Continue']";
+		checkAndClick(locValue);
+		Thread.sleep(1000);
+		
+	}
+	
+	
+	private static void checkAndClick(String locValue) {
+	
+		List<MobileElement> lstElems = driver.findElements(By.xpath(locValue));
+		if (lstElems.size() > 0) {
+			lstElems.get(0).click();
+		}
+		
+	}
+
+}

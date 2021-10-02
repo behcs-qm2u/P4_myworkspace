@@ -1,0 +1,28 @@
+package com.appium.calc;
+
+import java.net.URL;
+
+import io.appium.java_client.android.AndroidDriver;
+
+public class PracClac {
+
+	public static void main(String[] args) {
+		System.out.println("This is main of PracCalc");
+
+		// IP 127.0.0.0
+		// Port 4723
+		
+		// "https://127.0.0.1:4723/wd/hub"
+		
+		URL url = new URL("https://127.0.0.1:4723/wd/hub");
+		// Desired capability
+		
+		
+		
+		// Android Driver
+		
+	
+	
+	}
+	
+}
