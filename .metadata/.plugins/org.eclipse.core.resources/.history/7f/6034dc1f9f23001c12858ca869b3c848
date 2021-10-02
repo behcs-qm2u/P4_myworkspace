@@ -1,7 +1,5 @@
 package com.appium.tboader;
 
-import static org.junit.Assert.fail;
-
 import java.net.MalformedURLException;
 import java.util.List;
 
@@ -20,8 +18,6 @@ public class TBoarderTest01 extends TBBaseClass {
 	public static void main(String[] args) throws InterruptedException, MalformedURLException {
 
 		System.out.println("This is main() for " + (new Object(){}.getClass().getEnclosingClass().getSimpleName()));
-		
-
 		
 		// Call the BaseClass's setup. Later can change to Unit Test annotation
 		setup();
@@ -94,8 +90,9 @@ public class TBoarderTest01 extends TBBaseClass {
 						}
 					}	
 					// if not found?!
-					System.out.println("FATAL:clickView():: [" + elemClick + "] not found! To retry..");
-					continue;
+					System.out.println("FATAL:clickView():: [" + elemClick + "] not found!");
+					assert(false);
+					break;
 					
 				}
 				catch (StaleElementReferenceException e) {
@@ -113,8 +110,7 @@ public class TBoarderTest01 extends TBBaseClass {
 
 		}
 
-		// fall through
-		fail("FATAL:clickView():: [" + elemClick + "] not found! Exhausted retries!");
+
 
 		
 

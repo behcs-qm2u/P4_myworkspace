@@ -21,7 +21,7 @@ public class TBoarderTest01 extends TBBaseClass {
 
 		System.out.println("This is main() for " + (new Object(){}.getClass().getEnclosingClass().getSimpleName()));
 		
-
+		fail("this is Junit failed");
 		
 		// Call the BaseClass's setup. Later can change to Unit Test annotation
 		setup();
@@ -94,8 +94,9 @@ public class TBoarderTest01 extends TBBaseClass {
 						}
 					}	
 					// if not found?!
-					System.out.println("FATAL:clickView():: [" + elemClick + "] not found! To retry..");
-					continue;
+					System.out.println("FATAL:clickView():: [" + elemClick + "] not found!");
+					fail("FATAL:clickView():: [" + elemClick + "] not found!");
+					break;
 					
 				}
 				catch (StaleElementReferenceException e) {
@@ -113,8 +114,7 @@ public class TBoarderTest01 extends TBBaseClass {
 
 		}
 
-		// fall through
-		fail("FATAL:clickView():: [" + elemClick + "] not found! Exhausted retries!");
+
 
 		
 
