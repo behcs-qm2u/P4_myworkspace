@@ -18,8 +18,8 @@ public class TBBaseClass {
 	public static void setup() throws MalformedURLException {
 
 		// URL url = new URL("http://127.0.0.1:4723/wd/hub");
-		URL url = new URL("http://192.168.100.185:4723/wd/hub");
-		// URL url = new URL("http://192.168.100.41:4723/wd/hub");
+		// URL url = new URL("http://192.168.100.185:4723/wd/hub");
+		URL url = new URL("http://192.168.100.41:4723/wd/hub");
 
 		// Desired capability
 		DesiredCapabilities cap = new DesiredCapabilities();

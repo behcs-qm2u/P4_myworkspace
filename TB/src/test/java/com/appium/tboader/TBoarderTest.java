@@ -56,9 +56,154 @@ public class TBoarderTest extends TBBaseClass {
         clickView("Controls");
         clickView("01. Light Theme");
         
+        // Text Box: First Name
+        //android.widget.EditText[@resource-id='com.touchboarder.android.api.demos:id/edit']
+        fillInTextbox("//android.widget.EditText[@resource-id='com.touchboarder.android.api.demos:id/edit']",
+        		"CS");
+        
+        // Text Box: Last Name
+        //android.widget.EditText[@resource-id='com.touchboarder.android.api.demos:id/edit2']
+        fillInTextbox("//android.widget.EditText[@resource-id='com.touchboarder.android.api.demos:id/edit2']", 
+        		"Beh");       
+
+        // Checkbox 1
+        //android.widget.CheckBox[@resource-id='com.touchboarder.android.api.demos:id/check1']
+        checkboxAction("//android.widget.CheckBox[@resource-id='com.touchboarder.android.api.demos:id/check1']",
+        		true);
+        
+        // Checkbox 2
+        //android.widget.CheckBox[@resource-id='com.touchboarder.android.api.demos:id/check2']
+        checkboxAction("//android.widget.CheckBox[@resource-id='com.touchboarder.android.api.demos:id/check2']",
+        		true);
+        
+        
+        // Radio Group
+        // Radio Button - Let's select the first one
+        //android.widget.RadioGroup
+        selectRadioButton("//android.widget.RadioGroup", "RadioButton 1");
+        
+        // Toggle Button
+        switchToggleButton("//android.widget.ToggleButton[@resource-id='com.touchboarder.android.api.demos:id/toggle1']" ,
+        	true);
+
+        switchToggleButton("//android.widget.ToggleButton[@resource-id='com.touchboarder.android.api.demos:id/toggle2']" ,
+            	true);
+        
+        
         System.out.println("INFO: Finished execution.");
 	}
 
+	
+	private static void fillInTextbox(String xpath, String val) {
+		
+		try {
+			MobileElement tbox = (MobileElement) wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+			tbox.sendKeys(val);
+		}
+		catch (Exception e) {
+			System.out.println("ERROR:fillInTextBox():: Exception Error!");
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	private static void checkboxAction(String xpath, boolean toCheck) {
+		
+		System.out.println("DEBUG: in CheckboxAction()");
+		try {
+			MobileElement cbox = (MobileElement) wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+
+			System.out.println("INFO:checkboxAction()::Current state of " + cbox.getAttribute("text") + " - " + cbox.getAttribute("checked") );
+			
+			if ( (toCheck == true) && (cbox.getAttribute("checked").contentEquals("false") )) {
+				cbox.click();
+				System.out.println("INFO:checkboxAction():: CHECKED [" + cbox.getAttribute("text") +"]" );
+			}
+			else if ( (toCheck == false) && (cbox.getAttribute("checked").contentEquals("true") )) {
+				cbox.click();
+				System.out.println("INFO:checkboxAction():: UNCHECKED [" + cbox.getAttribute("text") + "]");
+			}
+			else if ( (toCheck == true) && (cbox.getAttribute("checked").contentEquals("true") ) ) {
+				System.out.println("INFO:checkboxAction():: [" + cbox.getAttribute("text") + "] already CHECKED. No further action needed.");
+			}
+			else if ( (toCheck == false) && (cbox.getAttribute("checked").contentEquals("false") )) {
+				System.out.println("INFO:checkboxAction():: [" + cbox.getAttribute("text") + "] already UNCHECKED. No further action needed.");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("INFO:checkboxAction():: Exception Error!");
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private static void selectRadioButton(String xpath, String selectedButton) {
+		
+		List<MobileElement> rButtons = null;
+		
+		MobileElement rGroup = (MobileElement) wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));		
+		
+		if ( rGroup != null ) {
+			try {
+				rButtons = rGroup.findElements(By.xpath("//android.widget.RadioButton"));
+				
+				System.out.println("DEBUG:clickView():: Nos of choices in this RadioGroup: " + rButtons.size());
+				for (MobileElement rBtn : rButtons) {
+					System.out.println(" -> " + rBtn.getAttribute("text"));
+					if (rBtn.getAttribute("text").equals(selectedButton)) {
+						System.out.println("     ^-- CLICK!");
+						rBtn.click();
+						// we want to list all, so don't break / return
+						// break;
+						// return ;
+					}
+				}	
+			
+			}
+			catch (StaleElementReferenceException e) {
+				System.out.println("DEBUG:selectRadioButton():: Caught [StaleElementReferenceException] retrying.." );
+			}
+			catch (Exception e) {
+				System.out.println("DEBUG:selectRadioButton():: Caught [something else?!] retrying.." );
+				e.printStackTrace();
+			}
+
+		}
+
+
+		
+	}
+	
+	
+	private static void switchToggleButton(String xpath, boolean switchOn) {
+
+		try {
+			MobileElement tgBtn = (MobileElement) wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+
+			if ( switchOn == true && tgBtn.getAttribute("checked").contentEquals("false") ) {
+				tgBtn.click();
+			}
+			else if ( switchOn == false && tgBtn.getAttribute("checked").contentEquals("true") ) {
+				tgBtn.click();
+			}
+			else if ( switchOn == true && tgBtn.getAttribute("checked").contentEquals("true") ) {
+				System.out.println("INFO:toggleButton()::" + xpath + " already switched ON. No further action needed.");
+			}
+			else if ( switchOn == false && tgBtn.getAttribute("checked").contentEquals("false") ) {
+				System.out.println("INFO:toggleButton()::" + xpath + " already switched OFF. No further action needed.");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("INFO:toggleButton():: Exception Error!");
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+	
 	/**
 	 * Helper method to select and click the list view item identified by elemClick
 	 * 
@@ -69,11 +214,13 @@ public class TBoarderTest extends TBBaseClass {
 
 		MobileElement parent = null; 
 		List<MobileElement> lstViews = null;
-
+		int retry_max = 3;
+		
 		System.out.println("DEBUG:clickView():: Going to click [" + elemClick +"]");
+
 		// we will do <retries times>
 		// StaleElement exception seems very common here, we will do retry
-		int retry_max = 3;
+		
 		WebDriverWait wait2 = (WebDriverWait) new WebDriverWait(driver, 8)
 				.ignoring(StaleElementReferenceException.class);
 
@@ -97,6 +244,7 @@ public class TBoarderTest extends TBBaseClass {
 							return ;
 						}
 					}	
+					
 					// if not found?!
 					System.out.println("FATAL:clickView():: [" + elemClick + "] not found! To retry..");
 					continue;
@@ -119,8 +267,6 @@ public class TBoarderTest extends TBBaseClass {
 
 		// fall through
 		fail("FATAL:clickView():: [" + elemClick + "] not found! Exhausted retries!");
-
-		
 
 
 	}

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="TBoarderTest01.Test01" project="TB" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testcase name="Test01" classname="com.appium.tboader.TBoarderTest01" time="40.783"/>
+</testrun>

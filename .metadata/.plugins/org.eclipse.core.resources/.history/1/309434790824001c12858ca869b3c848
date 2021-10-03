@@ -1,0 +1,14 @@
+package com.appium.tboader;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class TestControls {
+
+	@Test
+	public void test() {
+		fail("Not yet implemented");
+	}
+
+}

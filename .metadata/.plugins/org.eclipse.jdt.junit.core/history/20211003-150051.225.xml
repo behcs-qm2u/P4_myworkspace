@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="TestControls" project="TB" tests="3" started="3" failures="0" errors="0" ignored="0">
+  <testsuite name="com.appium.tboader.TestControls" time="9.447">
+    <testcase name="testRadioGroup" classname="com.appium.tboader.TestControls" time="3.953"/>
+    <testcase name="testFirstName" classname="com.appium.tboader.TestControls" time="2.683"/>
+    <testcase name="testSpinner" classname="com.appium.tboader.TestControls" time="2.811"/>
+  </testsuite>
+</testrun>
